@@ -11,6 +11,15 @@ class App extends React.Component {
         this.inputRef = React.createRef();
     }
 
+    async componentDidMount() {
+        const res = await fetch(
+            'https://interview-practice-todo-server.herokuapp.com/todos'
+        );
+        const json = await res.json();
+
+        this.setState({ todos: json });
+    }
+
     saveTodo = async e => {
         e.preventDefault();
 

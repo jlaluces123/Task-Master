@@ -1,6 +1,9 @@
 require('dotenv').config();
+const cors = require('cors');
 const express = require('express');
 const server = express();
+
+server.use(cors());
 const port = process.env.PORT || 6767;
 
 server.get('/', (req, res) => {
