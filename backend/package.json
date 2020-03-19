@@ -9,6 +9,6 @@
         "express": "^4.17.1"
     },
     "scripts": {
-        "server": "node index.js"
+        "start": "node index.js"
     }
 }
