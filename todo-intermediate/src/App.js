@@ -23,9 +23,23 @@ class App extends React.Component {
     saveTodo = async e => {
         e.preventDefault();
 
-        let todoValue = this.inputRef.current.value;
+        const options = {
+            method: 'post',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ todo: this.inputRef.current.value })
+        };
 
-        this.setState({ todos: [...this.state.todos, todoValue] });
+        const res = await fetch(
+            'https://interview-practice-todo-server.herokuapp.com/todos',
+            options
+        );
+        const json = await res.json();
+        console.log(json);
+
+        this.setState({ todos: json });
 
         this.inputRef.current.value = null;
         return false;
