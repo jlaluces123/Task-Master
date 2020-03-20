@@ -5,6 +5,8 @@ const server = express();
 const bodyParser = require('body-parser');
 
 server.use(cors());
+server.use(bodyParser.json());
+
 const port = process.env.PORT || 6767;
 
 server.get('/', (req, res) => {
