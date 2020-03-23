@@ -4,12 +4,10 @@ const express = require('express');
 const server = express();
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const Todo = require('./models/todo');
 
 mongoose.connect(
-    `mongodb+srv://admin:${process.env.MONGO_ACCESS_PW}@todo-app-nwxss.mongodb.net/test?retryWrites=true&w=majority`,
-    {
-        useMongoClient: true
-    }
+    `mongodb+srv://admin:${process.env.MONGO_ACCESS_PW}@todo-app-nwxss.mongodb.net/test?retryWrites=true&w=majority`
 );
 
 server.use(cors());
@@ -21,15 +19,29 @@ server.get('/', (req, res) => {
     res.send('Hello World');
 });
 
-let todos = ['Clean Room', 'Practice Coding'];
-
 server.get('/todos', (req, res) => {
-    return res.json(todos);
+    Todo.find()
+        .then(todos => {
+            return res.json(todos);
+        })
+        .catch(err => console.log(err));
 });
 
 server.post('/todos', (req, res) => {
-    todos.push(req.body.todo);
-    return res.json(todos);
+    const todo = new Todo({
+        _id: mongoose.Types.ObjectId(),
+        name: req.body.todo,
+        completed: false
+    });
+    todo.save()
+        .then(response => {
+            console.log(response);
+        })
+        .catch(err => console.log(err));
+    return res.json({
+        message: 'Todo is saved',
+        todoMade: todo
+    });
 });
 
 server.listen(port, () => console.log(`Server running on ${port}`));
