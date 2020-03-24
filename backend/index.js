@@ -27,6 +27,17 @@ server.get('/todos', (req, res) => {
         .catch(err => console.log(err));
 });
 
+server.get('/todos/:todoId', (req, res) => {
+    const todoId = req.params.todoId;
+
+    Todo.findById(todoId)
+        .exec()
+        .then(response => {
+            res.json(response);
+        })
+        .catch(err => console.log(err));
+});
+
 server.post('/todos', (req, res) => {
     const todo = new Todo({
         _id: mongoose.Types.ObjectId(),
@@ -44,8 +55,28 @@ server.post('/todos', (req, res) => {
         .catch(err => console.log(err));
 });
 
+server.patch('/todos/:todoId', (req, res) => {
+    const todoId = req.params.todoId;
+
+    Todo.update(
+        { _id: todoId },
+        {
+            $set: {
+                name: req.body.name,
+                completed: req.body.completed
+            }
+        }
+    )
+        .exec()
+        .then(response => {
+            console.log(response);
+            res.json(response);
+        })
+        .catch(err => console.log(err));
+});
+
 server.delete('/todos/:todoId', (req, res) => {
-    let todoId = req.params.todoId;
+    const todoId = req.params.todoId;
     Todo.remove({ _id: todoId })
         .exec()
         .then(response => {

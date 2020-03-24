@@ -29,7 +29,7 @@ class App extends React.Component {
                 Accept: 'application/json',
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ todo: this.inputRef.current.value })
+            body: JSON.stringify({ name: this.inputRef.current.value })
         };
 
         const res = await fetch(
@@ -51,8 +51,8 @@ class App extends React.Component {
                 <form onSubmit={this.saveTodo}>
                     <input type='text' ref={this.inputRef} />
                     <ul>
-                        {this.state.todos.map((todo, idx) => {
-                            return <li key={idx}>{todo}</li>;
+                        {this.state.todos.map(todo => {
+                            return <li key={todo._id}>{todo.name}</li>;
                         })}
                     </ul>
                 </form>
