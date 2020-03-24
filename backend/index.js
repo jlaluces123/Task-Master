@@ -30,7 +30,7 @@ server.get('/todos', (req, res) => {
 server.post('/todos', (req, res) => {
     const todo = new Todo({
         _id: mongoose.Types.ObjectId(),
-        name: req.body.todo,
+        name: req.body.name,
         completed: false
     });
     todo.save()
