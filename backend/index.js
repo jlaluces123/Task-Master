@@ -36,10 +36,20 @@ server.post('/todos', (req, res) => {
     todo.save()
         .then(response => {
             console.log(response);
-            return res.json({
+            res.json({
                 message: 'Todo is saved',
                 todoMade: todo
             });
+        })
+        .catch(err => console.log(err));
+});
+
+server.delete('/todos/:todoId', (req, res) => {
+    let todoId = req.params.todoId;
+    Todo.remove({ _id: todoId })
+        .exec()
+        .then(response => {
+            res.json(response);
         })
         .catch(err => console.log(err));
 });
