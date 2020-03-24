@@ -6,12 +6,12 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const Todo = require('./models/todo');
 
+server.use(cors());
+server.use(bodyParser.json());
+
 mongoose.connect(
     `mongodb+srv://admin:${process.env.MONGO_ACCESS_PW}@todo-app-nwxss.mongodb.net/test?retryWrites=true&w=majority`
 );
-
-server.use(cors());
-server.use(bodyParser.json());
 
 const port = process.env.PORT || 6767;
 
@@ -36,12 +36,12 @@ server.post('/todos', (req, res) => {
     todo.save()
         .then(response => {
             console.log(response);
+            return res.json({
+                message: 'Todo is saved',
+                todoMade: todo
+            });
         })
         .catch(err => console.log(err));
-    return res.json({
-        message: 'Todo is saved',
-        todoMade: todo
-    });
 });
 
 server.listen(port, () => console.log(`Server running on ${port}`));
