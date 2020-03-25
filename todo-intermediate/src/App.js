@@ -20,6 +20,18 @@ class App extends React.Component {
         this.setState({ todos: json });
     }
 
+    async componentDidUpdate(prevState) {
+        if (prevState.todos !== this.state.todos) {
+            const res = await fetch(
+                'https://interview-practice-todo-server.herokuapp.com/todos'
+            );
+            const json = await res.json();
+            this.setState({ todos: json });
+            return false;
+        }
+        return false;
+    }
+
     saveTodo = async e => {
         e.preventDefault();
 
@@ -39,7 +51,11 @@ class App extends React.Component {
         const json = await res.json();
         console.log(json);
 
-        this.setState({ todos: json });
+        this.setState(prevState => {
+            return {
+                todos: [...prevState.todos, json]
+            };
+        });
 
         this.inputRef.current.value = null;
         return false;
