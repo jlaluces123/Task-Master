@@ -61,6 +61,19 @@ class App extends React.Component {
         return false;
     };
 
+    deleteTodo = async e => {
+        e.preventDefault();
+
+        const res = await fetch(
+            `https://interview-practice-todo-server.herokuapp.com/todos/${e.target.id}`
+        );
+        const json = await res.json();
+        this.setState(prevState => {
+            return { todos: [...this.state.todos, json] };
+        });
+        return false;
+    };
+
     render() {
         return (
             <div className='wrapper'>
@@ -68,7 +81,12 @@ class App extends React.Component {
                     <input type='text' ref={this.inputRef} />
                     <ul>
                         {this.state.todos.map(todo => {
-                            return <li key={todo._id}>{todo.name}</li>;
+                            return (
+                                <li id={todo._id} key={todo._id}>
+                                    {todo.name}
+                                    <button onClick={this.deleteTodo}>X</button>
+                                </li>
+                            );
                         })}
                     </ul>
                 </form>
