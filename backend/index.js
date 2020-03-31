@@ -16,6 +16,8 @@ mongoose.connect(
 
 const { todosRouter } = require('./api/routes/routes');
 
+server.use('/todos', todosRouter);
+
 server.get('/', (req, res) => {
     res.send('Hello World');
 });
