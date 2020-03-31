@@ -8,81 +8,18 @@ const Todo = require('./models/todo');
 
 server.use(cors());
 server.use(bodyParser.json());
+const port = process.env.PORT || 6767;
 
 mongoose.connect(
     `mongodb+srv://admin:${process.env.MONGO_ACCESS_PW}@todo-app-nwxss.mongodb.net/test?retryWrites=true&w=majority`
 );
 
-const port = process.env.PORT || 6767;
+const { todosRouter } = require('./api/routes/routes');
+
+server.use('/todos', todosRouter);
 
 server.get('/', (req, res) => {
     res.send('Hello World');
-});
-
-server.get('/todos', (req, res) => {
-    Todo.find()
-        .then(todos => {
-            return res.json(todos);
-        })
-        .catch(err => console.log(err));
-});
-
-server.get('/todos/:todoId', (req, res) => {
-    const todoId = req.params.todoId;
-
-    Todo.findById(todoId)
-        .exec()
-        .then(response => {
-            res.json(response);
-        })
-        .catch(err => console.log(err));
-});
-
-server.post('/todos', (req, res) => {
-    const todo = new Todo({
-        _id: mongoose.Types.ObjectId(),
-        name: req.body.name,
-        completed: false
-    });
-    todo.save()
-        .then(response => {
-            console.log(response);
-            res.json({
-                message: 'Todo is saved',
-                todoMade: todo
-            });
-        })
-        .catch(err => console.log(err));
-});
-
-server.patch('/todos/:todoId', (req, res) => {
-    const todoId = req.params.todoId;
-
-    Todo.update(
-        { _id: todoId },
-        {
-            $set: {
-                name: req.body.name,
-                completed: req.body.completed
-            }
-        }
-    )
-        .exec()
-        .then(response => {
-            console.log(response);
-            res.json(response);
-        })
-        .catch(err => console.log(err));
-});
-
-server.delete('/todos/:todoId', (req, res) => {
-    const todoId = req.params.todoId;
-    Todo.remove({ _id: todoId })
-        .exec()
-        .then(response => {
-            res.json(response);
-        })
-        .catch(err => console.log(err));
 });
 
 server.listen(port, () => console.log(`Server running on ${port}`));
