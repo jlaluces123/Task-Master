@@ -4,7 +4,6 @@ const express = require('express');
 const server = express();
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-const Todo = require('./models/todo');
 
 server.use(cors());
 server.use(bodyParser.json());
@@ -14,9 +13,10 @@ mongoose.connect(
     `mongodb+srv://admin:${process.env.MONGO_ACCESS_PW}@todo-app-nwxss.mongodb.net/test?retryWrites=true&w=majority`
 );
 
-const { todosRouter } = require('./api/routes/routes');
+const { todosRouter, usersRouter } = require('./api/routes/routes');
 
 server.use('/todos', todosRouter);
+server.use('/users', usersRouter);
 
 server.get('/', (req, res) => {
     res.send('Hello World');
