@@ -11,6 +11,15 @@ router.get('/', (req, res) => {
         .catch(err => console.log(err));
 });
 
+router.get('/:userId', (req, res) => {
+    const userId = req.params.userId;
+    User.find({ _id: userId })
+        .then(response => {
+            res.json(response);
+        })
+        .catch(err => console.log(err));
+});
+
 router.post('/', (req, res) => {
     const user = new User({
         _id: mongoose.Types.ObjectId(),
