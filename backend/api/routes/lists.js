@@ -60,7 +60,23 @@ router.patch('/:userId/:listId', (req, res) => {
                 message: 'List name has been updated.',
                 editedList: response,
             });
-        });
+        })
+        .catch((err) => console.log(err));
+});
+
+router.delete('/:userId/:listId', (req, res) => {
+    const listId = req.params.listId;
+
+    List.remove({ _id: listId })
+        .exec()
+        .then((response) => {
+            console.log(response);
+            res.json({
+                message: 'List has been successfully removed.',
+                response,
+            });
+        })
+        .catch((err) => console.log(err));
 });
 
 module.exports = router;
