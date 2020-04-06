@@ -68,10 +68,6 @@ class App extends React.Component {
             `https://interview-practice-todo-server.herokuapp.com/todos/${e.target.id}`
         );
         const json = await res.json();
-        this.setState(prevState => {
-            return { todos: [...this.state.todos, json] };
-        });
-        return false;
     };
 
     render() {
