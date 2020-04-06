@@ -13,10 +13,15 @@ mongoose.connect(
     `mongodb+srv://admin:${process.env.MONGO_ACCESS_PW}@todo-app-nwxss.mongodb.net/test?retryWrites=true&w=majority`
 );
 
-const { todosRouter, usersRouter } = require('./api/routes/routes');
+const {
+    todosRouter,
+    usersRouter,
+    listsRouter,
+} = require('./api/routes/routes');
 
 server.use('/todos', todosRouter);
 server.use('/users', usersRouter);
+server.use('/lists', listsRouter);
 
 server.get('/', (req, res) => {
     res.send('Hello World');
