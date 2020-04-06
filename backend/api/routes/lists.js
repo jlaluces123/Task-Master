@@ -41,4 +41,26 @@ router.post('/:userId', (req, res) => {
         .catch((err) => console.log(err));
 });
 
+// Edit name of TodoList
+router.patch('/:userId/:listId', (req, res) => {
+    const listId = req.params.listId;
+
+    List.update(
+        { _id: listId },
+        {
+            $set: {
+                name: req.body.name,
+            },
+        }
+    )
+        .exec()
+        .then((response) => {
+            console.log(response);
+            res.json({
+                message: 'List name has been updated.',
+                editedList: response,
+            });
+        });
+});
+
 module.exports = router;
