@@ -28,18 +28,13 @@ router.get('/user/:userId', (req, res) => {
         .catch((err) => console.log(err));
 });
 
-router.get('/:listId', (req, res) => {
+router.get('/:listId', async (req, res) => {
     const listId = req.params.listId;
 
-    List.find({ _id: listId })
-        .exec()
-        .then((response) => {
-            res.json({
-                message: `This is list ${listId}`,
-                list: response,
-            });
-        })
-        .catch((err) => console.log(err));
+    const tasksInList = await List.findById(listId).populate('listOfTodos');
+    if (tasksInList) res.json(tasksInList);
+
+    res.send('There are no todos in the list');
 });
 
 // Create a new list!
