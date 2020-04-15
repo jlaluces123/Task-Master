@@ -1,14 +1,15 @@
 const express = require('express');
 const Todo = require('../../models/todo');
+const List = require('../../models/list');
 const mongoose = require('mongoose');
 const router = express.Router();
 
 router.get('/', (req, res) => {
     Todo.find()
-        .then(todos => {
+        .then((todos) => {
             return res.json(todos);
         })
-        .catch(err => console.log(err));
+        .catch((err) => console.log(err));
 });
 
 router.get('/:todoId', (req, res) => {
@@ -16,27 +17,29 @@ router.get('/:todoId', (req, res) => {
 
     Todo.findById(todoId)
         .exec()
-        .then(response => {
+        .then((response) => {
             res.json(response);
         })
-        .catch(err => console.log(err));
+        .catch((err) => console.log(err));
 });
 
-router.post('/', (req, res) => {
+router.post('/:listId', async (req, res) => {
+    const listId = req.params.listId;
+
     const todo = new Todo({
         _id: mongoose.Types.ObjectId(),
         name: req.body.name,
-        completed: false
+        completed: false,
+        insideList: listId,
     });
-    todo.save()
-        .then(response => {
-            console.log(response);
-            res.json({
-                message: 'Todo is saved',
-                todoMade: todo
-            });
-        })
-        .catch(err => console.log(err));
+
+    await todo.save();
+    const listById = await List.findById(listId);
+
+    listById.listOfTodos.push(todo);
+    await listById.save();
+
+    return res.send(listById);
 });
 
 router.patch('/:todoId', (req, res) => {
@@ -47,26 +50,26 @@ router.patch('/:todoId', (req, res) => {
         {
             $set: {
                 name: req.body.name,
-                completed: req.body.completed
-            }
+                completed: req.body.completed,
+            },
         }
     )
         .exec()
-        .then(response => {
+        .then((response) => {
             console.log(response);
             res.json(response);
         })
-        .catch(err => console.log(err));
+        .catch((err) => console.log(err));
 });
 
 router.delete('/:todoId', (req, res) => {
     const todoId = req.params.todoId;
     Todo.remove({ _id: todoId })
         .exec()
-        .then(response => {
+        .then((response) => {
             res.json(response);
         })
-        .catch(err => console.log(err));
+        .catch((err) => console.log(err));
 });
 
 module.exports = router;
